@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Runtime.CompilerServices;
 
 namespace HHPWsBe.Models
 {
@@ -13,23 +12,24 @@ namespace HHPWsBe.Models
         public string Email { get; set; }
         public string OrderType { get; set; }
         public string PaymentType { get; set; }
-        public ICollection<Item> Items { get; set; }
+        public ICollection<OrderItem> Items { get; set; } = new List<OrderItem>();
 
-        public decimal? Total
-        {
-            get
-            {
-                if (Items.Count() != 0)
-                {
-                    decimal total = 0;
-                    foreach (var item in Items)
-                    {
-                        total += item.Price;
-                    }
-                    return total;
-                }
-                return null;
-            }
-        }
+        //public decimal? Total
+        //{
+        //    get
+        //    {
+        //        if (Items.Count() != 0)
+        //        {
+        //            decimal total = 0;
+        //            foreach (var item in Items)
+        //            {
+
+        //                total += item.Price;
+        //            }
+        //            return total;
+        //        }
+        //        return null;
+        //    }
+        //}
     }
 }

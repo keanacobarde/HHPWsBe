@@ -8,7 +8,7 @@ namespace HHPWsBe.Models
             [Required]
             public string Name { get; set; }
             public decimal Price { get; set; }
-            public ICollection<Order> Orders { get; set; }
+            public ICollection<OrderItem> Orders { get; set; } = new List<OrderItem>();
 
     }
 }
