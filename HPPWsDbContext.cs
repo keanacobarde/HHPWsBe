@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using HHPWsBe.Models;
+using HHPWsBe.Data;
 
 namespace HHPWsBe
 {
@@ -16,7 +17,10 @@ namespace HHPWsBe
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
+            modelBuilder.Entity<User>().HasData(UsersData.Users);
+            modelBuilder.Entity<Item>().HasData(ItemsData.Items);
+            modelBuilder.Entity<OrderItem>().HasData(OrderItemsData.OrderItems);
+            modelBuilder.Entity<Order>().HasData(OrdersData.Orders);
         }
     }
 }
