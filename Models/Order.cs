@@ -14,22 +14,21 @@ namespace HHPWsBe.Models
         public string PaymentType { get; set; }
         public ICollection<OrderItem> Items { get; set; } = new List<OrderItem>();
 
-        //public decimal? Total
-        //{
-        //    get
-        //    {
-        //        if (Items.Count() != 0)
-        //        {
-        //            decimal total = 0;
-        //            foreach (var item in Items)
-        //            {
-
-        //                total += item.Price;
-        //            }
-        //            return total;
-        //        }
-        //        return null;
-        //    }
-        //}
+        public decimal? Total
+        {
+            get
+            {
+                if (Items.Count() != 0)
+                {
+                    decimal total = 0;
+                    foreach (var item in Items)
+                    {
+                        total += item.Item.Price;
+                    }
+                    return total;
+                }
+                return null;
+            }
+        }
     }
 }
