@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Http.Json;
 using HHPWsBe;
+using HHPWsBe.APIs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,5 +47,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+ItemsAPI.Map(app);
+OrderItemsAPI.Map(app);
+OrdersAPI.Map(app);
+UsersAPI.Map(app);
 
 app.Run();

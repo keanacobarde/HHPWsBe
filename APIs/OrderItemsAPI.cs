@@ -1,6 +1,6 @@
 ﻿namespace HHPWsBe.APIs
 {
-    public class OrdersAPI
+    public class OrderItemsAPI
     {
         public static void Map(WebApplication map)
         { }
