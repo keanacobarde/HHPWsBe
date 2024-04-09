@@ -19,7 +19,6 @@ namespace HHPWsBe
         {
             modelBuilder.Entity<User>().HasData(UsersData.Users);
             modelBuilder.Entity<Item>().HasData(ItemsData.Items);
-            modelBuilder.Entity<OrderItem>().HasData(OrderItemsData.OrderItems);
             modelBuilder.Entity<Order>().HasData(OrdersData.Orders);
         }
     }
