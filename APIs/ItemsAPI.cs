@@ -11,7 +11,7 @@ namespace HHPWsBe.APIs
                return db.Items.ToList();
             });
 
-            app.MapDelete("/items/delete", (HHPWsDbContext db, int id) => 
+            app.MapDelete("/items/delete/{id}", (HHPWsDbContext db, int id) => 
             { 
                 Item itemToDelete = db.Items.FirstOrDefault(i => i.Id == id);
                 if (itemToDelete == null)
