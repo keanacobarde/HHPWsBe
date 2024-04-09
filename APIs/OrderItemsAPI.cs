@@ -2,7 +2,7 @@
 {
     public class OrderItemsAPI
     {
-        public static void Map(WebApplication map)
+        public static void Map(WebApplication app)
         { }
     }
 }

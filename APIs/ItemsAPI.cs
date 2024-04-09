@@ -1,8 +1,27 @@
-﻿namespace HHPWsBe.APIs
+﻿using HHPWsBe.Models;
+
+namespace HHPWsBe.APIs
 {
     public class ItemsAPI
     {
-        public static void Map(WebApplication map)
-        { }
+        public static void Map(WebApplication app)
+        {
+            app.MapGet("/items", (HHPWsDbContext db) =>
+            {
+               return db.Items.ToList();
+            });
+
+            app.MapDelete("/items/delete/{id}", (HHPWsDbContext db, int id) => 
+            { 
+                Item itemToDelete = db.Items.FirstOrDefault(i => i.Id == id);
+                if (itemToDelete == null)
+                {
+                    return Results.NotFound();
+                }
+                db.Items.Remove(itemToDelete);
+                db.SaveChanges();
+                return Results.Ok(db.Items);
+            });
+        }
     }
 }

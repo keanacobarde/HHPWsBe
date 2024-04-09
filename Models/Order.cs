@@ -12,6 +12,7 @@ namespace HHPWsBe.Models
         public string Email { get; set; }
         public string OrderType { get; set; }
         public string PaymentType { get; set; }
+        public float Tip { get; set; }
         public ICollection<OrderItem> Items { get; set; } = new List<OrderItem>();
 
         public decimal? Total
