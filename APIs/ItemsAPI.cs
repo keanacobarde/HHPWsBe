@@ -2,7 +2,7 @@
 {
     public class ItemsAPI
     {
-        public static void Map(WebApplication map)
+        public static void Map(WebApplication app)
         { }
     }
 }
