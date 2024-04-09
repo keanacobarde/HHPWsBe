@@ -50,7 +50,7 @@ namespace HHPWsBe.APIs
                     orderToUpdate.Name = updatedOrder.Name;
                 }
 
-                if (updatedOrder.Status != null)
+                if (updatedOrder.Status != orderToUpdate.Status)
                 {
                     orderToUpdate.Status = updatedOrder.Status;
                 }
