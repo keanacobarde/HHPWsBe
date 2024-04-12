@@ -7,7 +7,7 @@ namespace HHPWsBe.APIs
     {
         public static void Map(WebApplication app)
         {
-            app.MapPost("order/additem", (HHPWsDbContext db, OrderItemDTO addItemToOrderDTO) => 
+            app.MapPost("/order/additem", (HHPWsDbContext db, OrderItemDTO addItemToOrderDTO) => 
             {
                 Order order = db.Orders.FirstOrDefault(o => o.Id == addItemToOrderDTO.OrderId);
                 Item item = db.Items.FirstOrDefault(i => i.Id == addItemToOrderDTO.ItemId);
@@ -28,6 +28,11 @@ namespace HHPWsBe.APIs
                 db.SaveChanges();
 
                 return Results.Ok(orderItem);
+
+            });
+
+            app.MapPost("/order/deleteitem/", (HHPWsDbContext db, DeleteOrderItemDTO orderItemToDelete) =>
+            {
 
             });
         }
