@@ -21,20 +21,20 @@ namespace HHPWsBe.APIs
                     return Results.BadRequest("Invalid data submitted");
                 }
             });
-            
-            app.MapGet("/orders", (HHPWsDbContext db) => 
+
+            app.MapGet("/orders", (HHPWsDbContext db) =>
             {
-                return db.Orders.Include(o => o.Items);
+                return db.Orders
+                         .Include(order => order.Items)
+                         .ThenInclude(orderItem => orderItem.Item);
             });
 
             app.MapGet("/orders/{id}", (HHPWsDbContext db, int id) =>
-            { 
-                Order orderDetails = db.Orders.FirstOrDefault(o => o.Id == id);
-                if (orderDetails == null)
-                { 
-                    return Results.NotFound();
-                }
-                return Results.Ok(orderDetails);
+            {
+                return db.Orders
+                         .Include(order => order.Items)
+                         .ThenInclude(orderItem => orderItem.Item)
+                         .SingleOrDefault(order => order.Id == id);
             });
 
             app.MapPut("/orders/{id}", (HHPWsDbContext db, int id, Order updatedOrder) =>
@@ -94,6 +94,8 @@ namespace HHPWsBe.APIs
                 db.Orders.Remove(orderToDelete);
                 return Results.Ok(db.Orders);
             });
+
+            // ** CUSTOM APIS ** //
 
         }
     }

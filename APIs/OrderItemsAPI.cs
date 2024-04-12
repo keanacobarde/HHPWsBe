@@ -20,14 +20,14 @@ namespace HHPWsBe.APIs
                 OrderItem orderItem = new()
                 {
                     Item = item,
-                    Order = order
+                    Order = order,
                 };
 
-                order.Items.Add(orderItem);
+                db.OrderItems.Add(orderItem);
 
                 db.SaveChanges();
 
-                return Results.Ok();
+                return Results.Ok(orderItem);
 
             });
         }
