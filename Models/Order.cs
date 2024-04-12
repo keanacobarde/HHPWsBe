@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using HHPWsBe;
 
 namespace HHPWsBe.Models
 {
@@ -13,23 +14,13 @@ namespace HHPWsBe.Models
         public string OrderType { get; set; }
         public string PaymentType { get; set; }
         public float Tip { get; set; }
-        public ICollection<OrderItem> Items { get; set; } = new List<OrderItem>();
-
+        public List<OrderItem>? Items { get; set; }
         public decimal? Total
         {
             get
             {
-                if (Items.Count() != 0)
-                {
-                    decimal total = 0;
-                    foreach (var item in Items)
-                    {
-                        total += item.Item.Price;
-                    }
-                    return total;
-                }
-                return null;
+                return Items.Sum(item => item.Price);
             }
         }
     }
-}
+};
