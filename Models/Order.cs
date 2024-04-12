@@ -13,9 +13,15 @@ namespace HHPWsBe.Models
         public string Email { get; set; }
         public string OrderType { get; set; }
         public string PaymentType { get; set; }
-        public float Tip { get; set; }
+        public decimal? Tip { get; set; }
+        public decimal? Total {
+            get
+            {
+                return Subtotal + Tip;
+            }
+        }
         public List<OrderItem>? Items { get; set; }
-        public decimal? Total
+        public decimal? Subtotal
         {
             get
             {
