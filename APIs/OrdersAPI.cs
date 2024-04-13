@@ -95,7 +95,20 @@ namespace HHPWsBe.APIs
             });
 
             // ** CUSTOM APIS ** //
-
+            app.MapGet("/orders/{id}/items", (HHPWsDbContext db, int id) => { 
+                Order orderToGetItems = db.Orders
+                         .Include(order => order.Items)
+                         .ThenInclude(orderItem => orderItem.Item)
+                         .SingleOrDefault(order => order.Id == id);
+                if (orderToGetItems == null)
+                {
+                    return Results.NotFound();
+                }
+                var itemsOfOrder = orderToGetItems.Items
+                    .Select(oi => oi.Item)
+                    .Select(i => new { i.Id, i.Name, i.Price});
+                return Results.Ok(itemsOfOrder);
+            });
         }
     }
 }
