@@ -32,7 +32,7 @@ namespace HHPWsBe.APIs
 
             });
 
-            app.MapPost("/order/deleteitem/", (HHPWsDbContext db, DeleteOrderItemDTO orderItemToDelete) =>
+            app.MapPost("/order/deleteitem", (HHPWsDbContext db, DeleteOrderItemDTO orderItemToDelete) =>
             {
                 Order order = db.Orders
                          .Include(order => order.Items)

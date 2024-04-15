@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using HHPWsBe.Models;
+using System.Linq;
+using HHPWsBe.DTOs;
 
 namespace HHPWsBe.APIs
 {
@@ -95,19 +97,22 @@ namespace HHPWsBe.APIs
             });
 
             // ** CUSTOM APIS ** //
-            app.MapGet("/orders/{id}/items", (HHPWsDbContext db, int id) => { 
-                Order orderToGetItems = db.Orders
+            app.MapGet("/orders/{id}/items", (HHPWsDbContext db, int id) => {
+                var orderToGetItems = db.Orders
+                         .Where(o => o.Id == id)
                          .Include(order => order.Items)
                          .ThenInclude(orderItem => orderItem.Item)
-                         .SingleOrDefault(order => order.Id == id);
-                if (orderToGetItems == null)
-                {
-                    return Results.NotFound();
-                }
-                var itemsOfOrder = orderToGetItems.Items
-                    .Select(oi => oi.Item)
-                    .Select(i => new { i.Id, i.Name, i.Price});
-                return Results.Ok(itemsOfOrder);
+                         .Select(order => new
+                         {
+                             Items = order.Items.Select(oi => new ItemDTO
+                             {
+                                 Id = oi.Item.Id,
+                                 OrderItemId = oi.Id,
+                                 Name = oi.Item.Name,
+                                 Price = oi.Item.Price,
+                             })
+                         });      
+                return Results.Ok(orderToGetItems);
             });
         }
     }
