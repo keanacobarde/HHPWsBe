@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using HHPWsBe.Models;
-using System.Linq;
 using HHPWsBe.DTOs;
 
 namespace HHPWsBe.APIs
@@ -9,11 +8,21 @@ namespace HHPWsBe.APIs
     {
         public static void Map(WebApplication app)
         {
-            app.MapPost("/orders", (HHPWsDbContext db, Order newOrder) => 
+            app.MapPost("/orders", (HHPWsDbContext db, AddOrderDTO newOrder) => 
             {
                 try
                 {
-                    db.Orders.Add(newOrder);
+                   db.Orders.Add(new Order
+                    {
+                        Id = db.Orders.Count() + 1,
+                        Name = newOrder.Name,
+                        Status = true,
+                        Phone = newOrder.Phone,
+                        Email = newOrder.Email,
+                        OrderType = newOrder.OrderType,
+                        PaymentType = String.Empty,
+                        Tip = 0,
+                    });
                     db.SaveChanges();
                     return Results.Created($"/api/reservations/{newOrder.Id}", newOrder);
                 }
