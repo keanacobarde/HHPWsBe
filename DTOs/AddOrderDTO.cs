@@ -7,6 +7,6 @@
         public string Phone { get; set; }
         public string Email { get; set; }
         public string OrderType { get; set; }
-        public DateTime Created { get; set; }
+        public DateTime Closed { get; set; }
     }
 }

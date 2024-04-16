@@ -26,7 +26,11 @@ namespace HHPWsBe.Models
         {
             get
             {
-                return Items.Sum(item => item.Price);
+                if (Items != null)
+                {
+                    Items?.Sum(item => item.Price);
+                }
+                return 0;
             }
         }
     }

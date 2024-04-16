@@ -96,12 +96,16 @@ namespace HHPWsBe.APIs
 
             app.MapDelete("/orders/{id}", (HHPWsDbContext db, int id) =>
             {
-                Order orderToDelete = db.Orders.FirstOrDefault(o => o.Id == id);
+                Order orderToDelete = db.Orders
+                         .Include(order => order.Items)
+                         .ThenInclude(orderItem => orderItem.Item)
+                         .SingleOrDefault(order => order.Id == id);
                 if (orderToDelete == null)
                 {
                     return Results.NotFound();
                 }
                 db.Orders.Remove(orderToDelete);
+                db.SaveChanges();
                 return Results.Ok(db.Orders);
             });
 

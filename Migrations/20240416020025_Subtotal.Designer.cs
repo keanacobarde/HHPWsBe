@@ -3,6 +3,7 @@ using System;
 using HHPWsBe;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HHPWsBe.Migrations
 {
     [DbContext(typeof(HHPWsDbContext))]
-    partial class HHPWsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240416020025_Subtotal")]
+    partial class Subtotal
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
