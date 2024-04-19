@@ -50,5 +50,6 @@ ItemsAPI.Map(app);
 OrderItemsAPI.Map(app);
 OrdersAPI.Map(app);
 UsersAPI.Map(app);
+PaymentInfoAPIcs.Map(app);
 
 app.Run();
