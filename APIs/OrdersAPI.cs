@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using HHPWsBe.Models;
-using System.Linq;
 using HHPWsBe.DTOs;
 
 namespace HHPWsBe.APIs
@@ -9,13 +8,23 @@ namespace HHPWsBe.APIs
     {
         public static void Map(WebApplication app)
         {
-            app.MapPost("/orders", (HHPWsDbContext db, Order newOrder) => 
+            app.MapPost("/orders", (HHPWsDbContext db, AddOrderDTO newOrder) => 
             {
                 try
                 {
-                    db.Orders.Add(newOrder);
+                   db.Orders.Add(new Order
+                    {
+                        Id = db.Orders.Count() + 1,
+                        Name = newOrder.Name,
+                        Status = true,
+                        Phone = newOrder.Phone,
+                        Email = newOrder.Email,
+                        OrderType = newOrder.OrderType,
+                        PaymentType = String.Empty,
+                        Tip = 0,
+                    });
                     db.SaveChanges();
-                    return Results.Created($"/api/reservations/{newOrder.Id}", newOrder);
+                    return Results.Created($"/orders/{newOrder.Id}", newOrder);
                 }
                 catch (DbUpdateException)
                 {
@@ -38,9 +47,9 @@ namespace HHPWsBe.APIs
                          .SingleOrDefault(order => order.Id == id);
             });
 
-            app.MapPut("/orders/{id}", (HHPWsDbContext db, int id, Order updatedOrder) =>
+            app.MapPut("/orders/{id}", (HHPWsDbContext db, int id, AddOrderDTO updatedOrder) =>
             {
-                Order orderToUpdate = db.Orders.FirstOrDefault(o => o.Id == id);
+                var orderToUpdate = db.Orders.FirstOrDefault(o => o.Id == id);
                 if (orderToUpdate == null)
                 {
                     return Results.NotFound();
@@ -49,11 +58,6 @@ namespace HHPWsBe.APIs
                 if (updatedOrder.Name != null)
                 { 
                     orderToUpdate.Name = updatedOrder.Name;
-                }
-
-                if (updatedOrder.Status != orderToUpdate.Status)
-                {
-                    orderToUpdate.Status = updatedOrder.Status;
                 }
 
                 if (updatedOrder.Phone != null)
@@ -69,30 +73,24 @@ namespace HHPWsBe.APIs
                 if (updatedOrder.OrderType != null)
                 {
                     orderToUpdate.OrderType = updatedOrder.OrderType;
-                }
-
-                if (updatedOrder.PaymentType != null)
-                {
-                    orderToUpdate.PaymentType = updatedOrder.PaymentType;
-                }
-
-                if (updatedOrder.Tip != null)
-                {
-                    orderToUpdate.Tip = updatedOrder.Tip;
-                }
+                };
 
                 db.SaveChanges();
-                return Results.NoContent();
+                return Results.Ok();
             });
 
             app.MapDelete("/orders/{id}", (HHPWsDbContext db, int id) =>
             {
-                Order orderToDelete = db.Orders.FirstOrDefault(o => o.Id == id);
+                Order orderToDelete = db.Orders
+                         .Include(order => order.Items)
+                         .ThenInclude(orderItem => orderItem.Item)
+                         .SingleOrDefault(order => order.Id == id);
                 if (orderToDelete == null)
                 {
                     return Results.NotFound();
                 }
                 db.Orders.Remove(orderToDelete);
+                db.SaveChanges();
                 return Results.Ok(db.Orders);
             });
 
@@ -113,6 +111,24 @@ namespace HHPWsBe.APIs
                              })
                          });      
                 return Results.Ok(orderToGetItems);
+            });
+
+            app.MapGet("/order/edit/{id}", (HHPWsDbContext db, int id) =>
+            {
+                var orderToEdit = db.Orders.FirstOrDefault(o => o.Id == id);
+                if (orderToEdit == null)
+                { 
+                    return Results.NotFound();
+                }
+
+                AddOrderDTO orderInfo = new AddOrderDTO {
+                Id = orderToEdit.Id,
+                Name = orderToEdit.Name,
+                Phone = orderToEdit.Phone, 
+                Email = orderToEdit.Email,
+                OrderType = orderToEdit.OrderType,
+                };
+                return Results.Ok(orderInfo);
             });
         }
     }

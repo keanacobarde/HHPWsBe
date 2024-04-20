@@ -12,7 +12,7 @@ namespace HHPWsBe.Models
         public string Phone { get; set; }
         public string Email { get; set; }
         public string OrderType { get; set; }
-        public string PaymentType { get; set; }
+        public string? PaymentType { get; set; }
         public decimal? Tip { get; set; }
         public DateTime? DateClosed { get; set; }  
         public decimal? Total {
@@ -26,7 +26,11 @@ namespace HHPWsBe.Models
         {
             get
             {
-                return Items.Sum(item => item.Price);
+                if (Items != null)
+                {
+                    return Items?.Sum(item => item.Price);
+                }
+                return 0;
             }
         }
     }
