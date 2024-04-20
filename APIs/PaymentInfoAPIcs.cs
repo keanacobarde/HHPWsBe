@@ -1,5 +1,7 @@
 ﻿using HHPWsBe.Models;
 using HHPWsBe.DTOs;
+using HHPWsBe.Migrations;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 
 namespace HHPWsBe.APIs
 {
@@ -24,10 +26,38 @@ namespace HHPWsBe.APIs
                 };
 
                 PaymentInfoDTO paymentInfo = new PaymentInfoDTO { 
+                    OrderId = id,
                     PaymentType = orderToGetPaymentInfo.PaymentType,
                     Tip = orderToGetPaymentInfo.Tip,
                 };
                 return Results.Ok(paymentInfo);
+            });
+
+            app.MapGet("/revenue", (HHPWsDbContext db) => 
+            {
+                decimal? total = 0;
+                foreach (Order order in db.Orders)
+                {
+                    if (order.Status == false && order.Total != null)
+                    {
+                        total += order.Total;
+                    }
+                    else
+                    {
+                        total += 0;
+                    }
+                }
+                RevenueDTO revenue = new RevenueDTO {
+                    TotalRevenue = total,
+                    TipTotal = db.Orders.Where(o => o.Status == false).Where(o => o.Tip != 0).Count(),
+                    DineInTotal = db.Orders.Where(o => o.Status == false).Where(o => o.OrderType == "Dine-in").Count(),
+                    PickupTotal = db.Orders.Where(o => o.Status == false).Where(o => o.OrderType == "Pickup").Count(),
+                    DeliveryTotal = db.Orders.Where(o => o.Status == false).Where(o => o.OrderType == "Delivery").Count(),
+                    CashTotal = db.Orders.Where(o => o.Status == false).Where(o => o.PaymentType == "Cash").Count(),
+                    CreditTotal = db.Orders.Where(o => o.Status == false).Where(o => o.PaymentType == "Credit").Count(),
+                    DebitTotal = db.Orders.Where(o => o.Status == false).Where(o => o.PaymentType == "Debit").Count(),
+                };
+                return Results.Ok(revenue);
             });
         }
     }

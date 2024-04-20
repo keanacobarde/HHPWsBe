@@ -79,6 +79,30 @@ namespace HHPWsBe.APIs
                 return Results.Ok();
             });
 
+            app.MapPut("/orders/paymentinfo/{id}", (HHPWsDbContext db, int id, PaymentInfoDTO updatedOrder) =>
+            {
+                var orderToUpdate = db.Orders.FirstOrDefault(o => o.Id == id);
+                if (orderToUpdate == null)
+                {
+                    return Results.NotFound();
+                }
+
+                if (updatedOrder.PaymentType != null)
+                {
+                    orderToUpdate.PaymentType = updatedOrder.PaymentType;
+                }
+
+                if (updatedOrder.Tip != null)
+                {
+                    orderToUpdate.Tip = updatedOrder.Tip;
+                };
+
+                orderToUpdate.Status = updatedOrder.Status;
+
+                db.SaveChanges();
+                return Results.Ok();
+            });
+
             app.MapDelete("/orders/{id}", (HHPWsDbContext db, int id) =>
             {
                 Order orderToDelete = db.Orders
