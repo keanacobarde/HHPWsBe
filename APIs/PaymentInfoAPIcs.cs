@@ -2,6 +2,7 @@
 using HHPWsBe.DTOs;
 using HHPWsBe.Migrations;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
+using Microsoft.EntityFrameworkCore;
 
 namespace HHPWsBe.APIs
 {
@@ -36,15 +37,13 @@ namespace HHPWsBe.APIs
             app.MapGet("/revenue", (HHPWsDbContext db) => 
             {
                 decimal? total = 0;
-                foreach (Order order in db.Orders)
+                foreach (Order order in db.Orders
+                         .Include(order => order.Items)
+                         .ThenInclude(orderItem => orderItem.Item))
                 {
                     if (order.Status == false && order.Total != null)
                     {
                         total += order.Total;
-                    }
-                    else
-                    {
-                        total += 0;
                     }
                 }
                 RevenueDTO revenue = new RevenueDTO {
